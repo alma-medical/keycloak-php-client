@@ -3,5 +3,6 @@
     "description": "A PHP client for Keycloak REST API",
     "type": "library",
     "require": {
+        "symfony/http-client": "^5.0"
     }
 }
