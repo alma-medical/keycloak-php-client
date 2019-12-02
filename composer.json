@@ -1,0 +1,7 @@
+{
+    "name": "alma-medical-imaging/keycloak-php-client",
+    "description": "A PHP client for Keycloak REST API",
+    "type": "library",
+    "require": {
+    }
+}
