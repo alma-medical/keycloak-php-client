@@ -414,7 +414,7 @@ class User
      */
     public function addGroup(string $group): self
     {
-        $this->group[] = $group;
+        $this->groups[] = $group;
 
         return $this;
     }
@@ -518,7 +518,7 @@ class User
      */
     public function addRealmRole(string $realmRole): self
     {
-        $this->realmRole[] = $realmRole;
+        $this->realmRoles[] = $realmRole;
 
         return $this;
     }
@@ -550,7 +550,7 @@ class User
      */
     public function addRequiredAction(string $requiredAction): self
     {
-        $this->requiredAction[] = $requiredAction;
+        $this->requiredActions[] = $requiredAction;
 
         return $this;
     }

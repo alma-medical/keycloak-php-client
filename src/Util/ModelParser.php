@@ -24,7 +24,7 @@ class ModelParser
             $user->setAttributes($rawUser['attributes']);
         }
         if (isset($rawUser['clientConsents'])) {
-            foreach ($rawUser['clientConsent'] as $rawClientConsent) {
+            foreach ($rawUser['clientConsents'] as $rawClientConsent) {
                 $user->addClientConsent(self::parseUserConsent($rawClientConsent));
             }
         }
@@ -145,7 +145,7 @@ class ModelParser
             $credential->setDigits($rawCredential['digits']);
         }
         if (isset($rawCredential['hashIterations'])) {
-            $credential->setHasIterations($rawCredential['hashIterations']);
+            $credential->setHashIterations($rawCredential['hashIterations']);
         }
         if (isset($rawCredential['hashedSaltedValue'])) {
             $credential->setHashedSaltedValue($rawCredential['hashedSaltedValue']);

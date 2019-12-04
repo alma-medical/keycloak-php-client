@@ -30,7 +30,7 @@ class UserConsent
     /**
      * Get the value of createdDate.
      */
-    public function getCreatedDate(): ?\DateTime
+    public function getCreatedDate(): ?int
     {
         return $this->createdDate;
     }
@@ -38,7 +38,7 @@ class UserConsent
     /**
      * Set the value of createdDate.
      */
-    public function setCreatedDate(\DateTime $createdDate): self
+    public function setCreatedDate(int $createdDate): self
     {
         $this->createdDate = $createdDate;
 
@@ -70,7 +70,7 @@ class UserConsent
     {
         $this->grantedClientScopes = [];
 
-        foreach ($$grantedClientScopes as $grantedClientScope) {
+        foreach ($grantedClientScopes as $grantedClientScope) {
             $this->addGrantedClientScope($grantedClientScope);
         }
 
@@ -80,7 +80,7 @@ class UserConsent
     /**
      * Get the value of lastUpdatedDate.
      */
-    public function getLastUpdatedDate(): ?\DateTime
+    public function getLastUpdatedDate(): ?int
     {
         return $this->lastUpdatedDate;
     }
@@ -88,7 +88,7 @@ class UserConsent
     /**
      * Set the value of lastUpdatedDate.
      */
-    public function setLastUpdatedDate(\DateTime $lastUpdatedDate): self
+    public function setLastUpdatedDate(int $lastUpdatedDate): self
     {
         $this->lastUpdatedDate = $lastUpdatedDate;
 

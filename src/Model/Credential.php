@@ -19,7 +19,7 @@ class Credential
     private $counter;
 
     /**
-     * @var \DateTime
+     * @var int
      */
     private $createdDate;
 
@@ -36,7 +36,7 @@ class Credential
     /**
      * @var int
      */
-    private $hasIterations;
+    private $hashIterations;
 
     /**
      * @var string
@@ -125,7 +125,7 @@ class Credential
     /**
      * Get createdDate.
      */
-    public function getCreatedDate(): ?\DateTime
+    public function getCreatedDate(): ?int
     {
         return $this->createdDate;
     }
@@ -133,7 +133,7 @@ class Credential
     /**
      * Set createdDate.
      */
-    public function setCreatedDate(\DateTime $createdDate): self
+    public function setCreatedDate(int $createdDate): self
     {
         $this->createdDate = $createdDate;
 
@@ -177,19 +177,19 @@ class Credential
     }
 
     /**
-     * Get hasIterations.
+     * Get hashIterations.
      */
-    public function getHasIterations(): ?int
+    public function getHashIterations(): ?int
     {
-        return $this->hasIterations;
+        return $this->hashIterations;
     }
 
     /**
-     * Set hasIterations.
+     * Set hashIterations.
      */
-    public function setHasIterations(int $hasIterations): self
+    public function setHashIterations(int $hashIterations): self
     {
-        $this->hasIterations = $hasIterations;
+        $this->hashIterations = $hashIterations;
 
         return $this;
     }
