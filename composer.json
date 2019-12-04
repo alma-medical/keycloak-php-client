@@ -1,5 +1,5 @@
 {
-    "name": "alma-medical-imaging/keycloak-php-client",
+    "name": "alma-medical-imaging/keycloak-client",
     "description": "A PHP client for Keycloak REST API",
     "keywords": ["keycloak", "api", "client"],
     "type": "library",
