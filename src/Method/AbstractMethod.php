@@ -8,10 +8,32 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 abstract class AbstractMethod implements MethodInterface
 {
     private $keycloak;
+    private $queryParameters = [];
+    private $bodyParameters = [];
 
     public function __construct(Keycloak $keycloak)
     {
         $this->keycloak = $keycloak;
+    }
+
+    /**
+     * Set query parameters.
+     */
+    public function setQueryParameters(array $queryParameters): self
+    {
+        $this->queryParameters = $queryParameters;
+
+        return $this;
+    }
+
+    /**
+     * Set body parameters.
+     */
+    public function setBodyParameters(array $bodyParameters): self
+    {
+        $this->bodyParameters = $bodyParameters;
+
+        return $this;
     }
 
     /**
@@ -41,7 +63,12 @@ abstract class AbstractMethod implements MethodInterface
      */
     public function call()
     {
-        $response = $this->keycloak->callMethod($this->getMethodName(), $this->getHttpMethod());
+        $response = $this->keycloak->callMethod(
+            $this->getMethodName(),
+            $this->getHttpMethod(),
+            $this->queryParameters,
+            $this->bodyParameters
+        );
 
         return $this->parseResponse($response);
     }

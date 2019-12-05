@@ -89,16 +89,26 @@ class Keycloak
     /**
      * Call an API method.
      */
-    public function callMethod(string $endpoint, string $method = 'GET'): ResponseInterface
-    {
+    public function callMethod(
+        string $endpoint,
+        string $method = 'GET',
+        array $queryParameters = [],
+        array $bodyParameters = []
+    ): ResponseInterface {
         $client = HttpClient::create();
+
+        $queryParametersString = '';
+        if (count($queryParameters) > 0) {
+            $queryParametersString = '?'.http_build_query($queryParameters);
+        }
 
         return $client->request(
             $method,
-            "{$this->keycloakProvider->authServerUrl}/admin/realms/{$this->keycloakProvider->realm}/$endpoint",
+            "{$this->keycloakProvider->authServerUrl}/admin/realms/{$this->keycloakProvider->realm}/$endpoint$queryParametersString",
             [
                 'auth_bearer' => $this->getToken()->getToken(),
                 'headers' => ['Content-Type' => 'application/json'],
+                'json' => $bodyParameters,
             ]
         );
     }
