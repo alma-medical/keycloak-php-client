@@ -16,7 +16,7 @@ This package provides a PHP wrapper for [Keycloak REST API](https://www.keycloak
 ## 1. Installation
 
 Run this command to integrate the Keycloak REST API client to your existing project:  
-`composer require alma-medical-imaging/keycloak-client`
+`composer require alma-medical/keycloak-client`
 
 ## 2. How to use it
 
