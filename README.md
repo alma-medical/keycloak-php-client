@@ -68,7 +68,7 @@ This method get a user
 ```php
 use AlmaMedical\KeycloakClient\Method\GetUser;
 
-$getUsers = new GetUser($client, 'iser_id');
+$getUsers = new GetUser($client, 'user_id');
 $user = $getUsers->call();
 ```
 
