@@ -3,6 +3,7 @@
 namespace AlmaMedical\KeycloakClient;
 
 use League\OAuth2\Client\Token\AccessToken;
+use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Stevenmaguire\OAuth2\Client\Provider\Keycloak as KeycloakProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -29,34 +30,33 @@ class Keycloak
      */
     private function getToken(): AccessToken
     {
-        $cachePool = $this->getCachePool();
-        $cache = $cachePool->getItem(self::CACHE_ITEM);
+        $cacheItem = $this->getCacheItem();
         // If the token does not exists, create it
-        if (!$cache->isHit()) {
+        if (!$cacheItem->isHit()) {
             $token = $this->keycloakProvider->getAccessToken('client_credentials');
-            $this->setToken($token);
+            $this->storeTokenToCache($token);
         }
 
-        $token = $cachePool->getItem(self::CACHE_ITEM)->get();
+        $token = $this->getCacheItem()->get();
 
         // If the token has expired, refresh it with refresh token
         if ($token->hasExpired()) {
             $token = $this->keycloakProvider->getAccessToken('refresh_token', [
                 'refresh_token' => $this->token->getRefreshToken(),
             ]);
-            $this->setToken($token);
+            $this->storeTokenToCache($token);
         }
 
         return $token;
     }
 
     /**
-     * Set token.
+     * Set tokenStore token to cache.
      */
-    private function setToken(AccessToken $token): void
+    private function storeTokenToCache(AccessToken $token): void
     {
-        $cache = $this->getCachePool()->getItem(self::CACHE_ITEM);
-        $this->getCachePool()->save($cache->set($token));
+        $cacheItem = $this->getCacheItem();
+        $this->getCachePool()->save($cacheItem->set($token));
     }
 
     /**
@@ -87,6 +87,14 @@ class Keycloak
         }
 
         return $this->cachePool;
+    }
+
+    /**
+     * Get cache item.
+     */
+    private function getCacheItem(): CacheItemInterface
+    {
+        return $this->getCachePool()->getItem(self::CACHE_ITEM);
     }
 
     /**
