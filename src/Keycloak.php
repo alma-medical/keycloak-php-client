@@ -15,7 +15,7 @@ class Keycloak
     const ENDPOINT_AUTHORIZATION = 'protocol/openid-connect/auth';
     const ENDPOINT_TOKEN = 'protocol/openid-connect/auth';
 
-    const CACHE_ITEM = 'token';
+    const CACHE_ITEM = 'keycloak.token';
 
     private $keycloakProvider;
     private $cachePool;
