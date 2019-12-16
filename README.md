@@ -5,20 +5,21 @@ This package provides a PHP wrapper for [Keycloak REST API](https://www.keycloak
 <!-- TOC depthFrom:2 -->
 
 - [Keycloak REST API PHP client](#keycloak-rest-api-php-client)
-  - [1. Installation](#1-installation)
-  - [2. How to use it](#2-how-to-use-it)
-    - [2.1. Get users](#21-get-users)
-    - [2.2. Get user](#22-get-user)
-  - [3. Running tests](#3-running-tests)
+  - [Installation](#installation)
+  - [How to use it](#how-to-use-it)
+    - [Get users](#get-users)
+    - [Get user](#get-user)
+  - [Cache](#cache)
+  - [Running tests](#running-tests)
 
 <!-- /TOC -->
 
-## 1. Installation
+## Installation
 
 Run this command to integrate the Keycloak REST API client to your existing project:  
 `composer require alma-medical/keycloak-client`
 
-## 2. How to use it
+## How to use it
 
 First of all we need to configure a oauth2 provider for authenticating against Keycloak. For that purpose we use the [stevenmaguire/oauth2-keycloak](https://github.com/stevenmaguire/oauth2-keycloak) package, a [league/oauth2-client](https://github.com/thephpleague/oauth2-client) Keycloak provider.
 This is an example of how to do that:
@@ -50,7 +51,7 @@ $response = $client->callMethod('users');
 
 To make easier the parse of the responses, some methods have been implemented:
 
-### 2.1. Get users
+### Get users
 
 This method gets all the users:
 
@@ -61,7 +62,7 @@ $getUsers = new GetUsers($client);
 $users = $getUsers->call();
 ```
 
-### 2.2. Get user
+### Get user
 
 This method get a user
 
@@ -72,7 +73,17 @@ $getUsers = new GetUser($client, 'user_id');
 $user = $getUsers->call();
 ```
 
-## 3. Running tests
+## Cache
+
+You can use a `Psr\Cache\CacheItemPoolInterface` to cache Keycloak tokens. To use it simply set your `CacheItemPoolInterface` and the client will package will use it:
+
+```php
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
+$client->setCachePool(new FilesystemAdapter());
+```
+
+## Running tests
 
 To run the tests run the following command:  
 `./vendor/bin/phpunit`
