@@ -3,9 +3,9 @@
 namespace AlmaMedical\KeycloakClient;
 
 use League\OAuth2\Client\Token\AccessToken;
+use Psr\Cache\CacheItemPoolInterface;
 use Stevenmaguire\OAuth2\Client\Provider\Keycloak as KeycloakProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\CacheItem;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -17,7 +17,7 @@ class Keycloak
     const CACHE_ITEM = 'token';
 
     private $keycloakProvider;
-    private $cache;
+    private $cachePool;
 
     public function __construct(KeycloakProvider $keycloakProvider)
     {
@@ -29,13 +29,15 @@ class Keycloak
      */
     private function getToken(): AccessToken
     {
-        $tokenCacheItem = $this->getTokenCacheItem();
-        $token = $tokenCacheItem->get();
+        $cachePool = $this->getCachePool();
+        $cache = $cachePool->getItem(self::CACHE_ITEM);
         // If the token does not exists, create it
-        if (!$token) {
+        if (!$cache->isHit()) {
             $token = $this->keycloakProvider->getAccessToken('client_credentials');
             $this->setToken($token);
         }
+
+        $token = $cachePool->getItem(self::CACHE_ITEM)->get();
 
         // If the token has expired, refresh it with refresh token
         if ($token->hasExpired()) {
@@ -53,37 +55,38 @@ class Keycloak
      */
     private function setToken(AccessToken $token): void
     {
-        $this->getTokenCacheItem()->set($token);
+        $cache = $this->getCachePool()->getItem(self::CACHE_ITEM);
+        $this->getCachePool()->save($cache->set($token));
     }
 
     /**
      * Get default cache. This should not be used in production environment.
      */
-    private function getDefaultTokenCacheItem(): CacheItem
+    private function getDefaultCachePool(): CacheItemPoolInterface
     {
-        return (new ArrayAdapter())->getItem(self::CACHE_ITEM);
+        return new ArrayAdapter();
     }
 
     /**
-     * Set cache.
+     * Set cache pool.
      */
-    public function setCache(CacheItem $cache): self
+    public function setCachePool(CacheItemPoolInterface $cachePool): self
     {
-        $this->cache = $cache;
+        $this->cachePool = $cachePool;
 
         return $this;
     }
 
     /**
-     * Get cache.
+     * Get cache pool.
      */
-    private function getTokenCacheItem(): CacheItem
+    private function getCachePool(): CacheItemPoolInterface
     {
-        if (!$this->cache) {
-            $this->setCache($this->getDefaultTokenCacheItem());
+        if (!$this->cachePool) {
+            $this->setCachePool($this->getDefaultCachePool());
         }
 
-        return $this->cache;
+        return $this->cachePool;
     }
 
     /**
