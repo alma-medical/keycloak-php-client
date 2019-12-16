@@ -42,7 +42,7 @@ class Keycloak
         // If the token has expired, refresh it with refresh token
         if ($token->hasExpired()) {
             $token = $this->keycloakProvider->getAccessToken('refresh_token', [
-                'refresh_token' => $this->token->getRefreshToken(),
+                'refresh_token' => $token->getRefreshToken(),
             ]);
             $this->storeTokenToCache($token);
         }
