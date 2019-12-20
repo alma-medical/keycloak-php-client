@@ -2,6 +2,7 @@
 
 namespace AlmaMedical\KeycloakClient;
 
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -41,10 +42,20 @@ class Keycloak
 
         // If the token has expired, refresh it with refresh token
         if ($token->hasExpired()) {
-            $token = $this->keycloakProvider->getAccessToken('refresh_token', [
-                'refresh_token' => $token->getRefreshToken(),
-            ]);
-            $this->storeTokenToCache($token);
+            try {
+                $token = $this->keycloakProvider->getAccessToken('refresh_token', [
+                    'refresh_token' => $token->getRefreshToken(),
+                ]);
+                $this->storeTokenToCache($token);
+            } catch (IdentityProviderException $e) {
+                // If the refresh token is expired the get a new token
+                if (false !== strpos($e->getMessage(), 'Refresh token expired')) {
+                    $token = $this->keycloakProvider->getAccessToken('client_credentials');
+                    $this->storeTokenToCache($token);
+                } else {
+                    throw $e;
+                }
+            }
         }
 
         return $token;
